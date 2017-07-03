@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">FirebaseDemo</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="dessert_names">
+        <item>Cupcake</item>
+        <item>Donut</item>
+        <item>Eclair</item>
+        <item>FroYo</item>
+        <item>Gingerbread</item>
+        <item>Honeycomb</item>
+        <item>Ice Cream Sandwich</item>
+        <item>Jelly Bean</item>
+        <item>KitKat</item>
+        <item>Lollipop</item>
+        <item>Marshmallow</item>
+        <item>Nougat</item>
+    </string-array>
+
+</resources>
