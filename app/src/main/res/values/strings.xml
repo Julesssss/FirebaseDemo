@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">FirebaseDemo</string>
     <string name="action_settings">Settings</string>
+    <string name="dialog_title">Force Update</string>
+    <string name="dialog_message">Please throw away the app, it\'s past the best before date!</string>
 
     <string-array name="dessert_names">
         <item>Cupcake</item>

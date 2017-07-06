@@ -6,6 +6,9 @@ import julianrosser.firebasedemo.model.objects.Dessert;
 
 public class FirebaseCallbacks {
 
+    /**
+     * Database
+     */
     public interface SaveDessertCallback {
         void onSuccess();
     }
@@ -16,6 +19,14 @@ public class FirebaseCallbacks {
 
     public interface LoadDessertFail {
         void onFail(String message);
+    }
+
+    /**
+     * Remote Config
+     */
+
+    public interface RemoteConfigCallback {
+        void onCompleted();
     }
 
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <Key>message</Key>
+        <defualt>test OK! 01</defualt>
+    </entry>
+    <entry>
+        <Key>feature_show_id</Key>
+        <defualt>false</defualt>
+    </entry>
+    <entry>
+        <Key>force_update</Key>
+        <defualt>false</defualt>
+    </entry>
+    <entry>
+        <Key>colour_primary</Key>
+        <defualt>false</defualt>
+    </entry>
+</defaultsMap><!-- END xml_defaults -->

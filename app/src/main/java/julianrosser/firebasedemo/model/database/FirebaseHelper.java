@@ -13,10 +13,10 @@ import julianrosser.firebasedemo.model.objects.Dessert;
 
 public class FirebaseHelper extends FirebaseCallbacks {
 
-    private final DatabaseReference databaseReference;
+    private final DatabaseReference databaseRef;
 
     public FirebaseHelper() {
-        databaseReference = FirebaseDemo.getInstance().getDatabaseReference();
+        databaseRef = FirebaseDemo.getInstance().getDatabaseReference();
     }
 
     /**
@@ -25,31 +25,31 @@ public class FirebaseHelper extends FirebaseCallbacks {
 
     // Save single object to table
     public void saveSingleDessert(Dessert dessert) {
-        DatabaseReference tableReference = databaseReference.child(FirebaseKeys.TABLE_SINGLE_DESSERT);
-        tableReference.setValue(dessert);
+        DatabaseReference tableRef = databaseRef.child(FirebaseKeys.TABLE_SINGLE_DESSERT);
+        tableRef.setValue(dessert);
     }
 
     // Save dessert using PushID
     public void saveDessertWithID(Dessert dessert) {
-        DatabaseReference tableReference = databaseReference.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS).push();
-        dessert.setId(tableReference.getKey());
-        tableReference.setValue(dessert);
+        DatabaseReference tableRef = databaseRef.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS).push();
+        dessert.setId(tableRef.getKey());
+        tableRef.setValue(dessert);
     }
 
     // Save dessert with completion listener
     public void saveDessertWithCallback(Dessert dessert, SaveDessertCallback callback) {
-        DatabaseReference tableReference = databaseReference.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS).push();
-        dessert.setId(tableReference.getKey());
-        tableReference.setValue(dessert, (databaseError, databaseReference1) -> callback.onSuccess());
+        DatabaseReference tableRef = databaseRef.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS).push();
+        dessert.setId(tableRef.getKey());
+        tableRef.setValue(dessert, (databaseError, databaseReference1) -> callback.onSuccess());
     }
 
     /**
      * Retrieve data from Firebase
      */
 
-    public void loadDessertsFromFirebase(LoadDessertSuccess successCallback, LoadDessertFail failureCallback) {
-        DatabaseReference dessertTable = databaseReference.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS);
-        dessertTable.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void loadDessertsOnce(LoadDessertSuccess successCallback, LoadDessertFail failureCallback) {
+        DatabaseReference dessertTable = databaseRef.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS);
+        dessertTable.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<Dessert> desserts = new ArrayList<>();
@@ -67,4 +67,10 @@ public class FirebaseHelper extends FirebaseCallbacks {
         });
 
     }
+
+    public void addChildListener() {
+//        DatabaseReference dessertTable = databaseRef.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS);
+//        dessertTable.add
+    }
+
 }

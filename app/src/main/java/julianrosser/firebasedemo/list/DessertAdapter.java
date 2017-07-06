@@ -13,13 +13,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import julianrosser.firebasedemo.R;
 import julianrosser.firebasedemo.model.objects.Dessert;
+import julianrosser.firebasedemo.remoteconfig.RemoteConfigHelper;
 
 public class DessertAdapter extends RecyclerView.Adapter<DessertAdapter.DessertHolder> {
 
     private List<Dessert> desserts;
+    private boolean featureShowIDEnable;
 
-    public DessertAdapter() {
+
+    public DessertAdapter(RemoteConfigHelper remoteConfigHelper) {
         this.desserts = new ArrayList<>();
+        featureShowIDEnable = remoteConfigHelper.getFeatureFlag(RemoteConfigHelper.FEATURE_SHOW_ID);
     }
 
     @Override
@@ -34,7 +38,8 @@ public class DessertAdapter extends RecyclerView.Adapter<DessertAdapter.DessertH
         Dessert dessert = desserts.get(position);
         holder.setTag(dessert);
         holder.setName(dessert.getName());
-        holder.setClass(dessert.getId());
+        if (featureShowIDEnable)
+            holder.setId(dessert.getId());
     }
 
     @Override
@@ -57,8 +62,8 @@ public class DessertAdapter extends RecyclerView.Adapter<DessertAdapter.DessertH
         @BindView(R.id.text_name)
         TextView textName;
 
-        @BindView(R.id.text_class)
-        TextView textClass;
+        @BindView(R.id.text_id)
+        TextView textId;
 
         DessertHolder(View itemView) {
             super(itemView);
@@ -70,8 +75,9 @@ public class DessertAdapter extends RecyclerView.Adapter<DessertAdapter.DessertH
             textName.setText(text);
         }
 
-        void setClass(String text) {
-            textClass.setText(text);
+        void setId(String text) {
+            textId.setVisibility(View.VISIBLE);
+            textId.setText(text);
         }
 
         void setTag(Dessert dessert) {
