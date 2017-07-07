@@ -17,14 +17,13 @@ import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import julianrosser.firebasedemo.R;
-import julianrosser.firebasedemo.Utils;
-import julianrosser.firebasedemo.model.database.FirebaseHelper;
-import julianrosser.firebasedemo.model.objects.Dessert;
-import julianrosser.firebasedemo.remoteconfig.RemoteConfigHelper;
+import julianrosser.firebasedemo.firebase.DatabaseHelper;
+import julianrosser.firebasedemo.firebase.RemoteConfigHelper;
+import julianrosser.firebasedemo.model.Dessert;
 
-import static julianrosser.firebasedemo.remoteconfig.RemoteConfigHelper.FEATURE_PROMOTION;
-import static julianrosser.firebasedemo.remoteconfig.RemoteConfigHelper.FEATURE_PROMOTION_TOOLBAR_COLOUR;
-import static julianrosser.firebasedemo.remoteconfig.RemoteConfigHelper.FEATURE_SHOW_ID;
+import static julianrosser.firebasedemo.firebase.RemoteConfigHelper.FEATURE_PROMOTION;
+import static julianrosser.firebasedemo.firebase.RemoteConfigHelper.FEATURE_PROMOTION_TOOLBAR_COLOUR;
+import static julianrosser.firebasedemo.firebase.RemoteConfigHelper.FEATURE_SHOW_ID;
 
 public class ListActivity extends AppCompatActivity {
 
@@ -42,8 +41,8 @@ public class ListActivity extends AppCompatActivity {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    private FirebaseHelper firebaseHelper;
     private DessertAdapter dessertAdapter;
+    private DatabaseHelper databaseHelper;
     private RemoteConfigHelper remoteConfigHelper;
 
     @Override
@@ -53,7 +52,7 @@ public class ListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        firebaseHelper = new FirebaseHelper();
+        databaseHelper = new DatabaseHelper();
         remoteConfigHelper = new RemoteConfigHelper(this::setUpList);
 
         fab.setOnClickListener(view -> onFabPressed());
@@ -61,13 +60,16 @@ public class ListActivity extends AppCompatActivity {
 
     private void onFabPressed() {
         // Create new Dessert object
-        Dessert dessert = new Dessert(Utils.getRandomDessert(getResources()));
+        Dessert dessert = Dessert.newRandom(this);
+
         // Save to table
+//        databaseHelper.saveSingleDessert(dessert);
 
         // Save with ID
+//        databaseHelper.saveDessertWithID(dessert);
 
         // Save with callback
-        firebaseHelper.saveDessertWithCallback(dessert, () ->
+        databaseHelper.saveDessertWithCallback(dessert, () ->
                 showMessage(dessert.getName() + " saved!"));
     }
 
@@ -75,14 +77,35 @@ public class ListActivity extends AppCompatActivity {
         checkForForceUpgrade();
         checkForPromotion();
 
+        // Set up Dessert list
         dessertAdapter = new DessertAdapter(remoteConfigHelper);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(dessertAdapter);
         loadData();
 
-//        showMessage(remoteConfigHelper.getWelcomeMessage());
+        showMessage(remoteConfigHelper.getWelcomeMessage());
         if (remoteConfigHelper.getFeatureFlag(FEATURE_SHOW_ID))
             showMessage("Feature 'Dessert ID' enabled!");
+    }
+
+    private void loadData() {
+        // Load node on change
+        databaseHelper.loadDessertsOnce(retrievedDesserts -> {
+            dessertAdapter.setDesserts(retrievedDesserts);
+            progressBar.setVisibility(View.GONE);
+        }, this::showMessage);
+
+        // Load node child which has been modified
+        databaseHelper.loadDessertsOnChildChange(newDessert -> {
+            // dessertAdapter.addDesert(newDessert);
+        }, updatedDessert -> {
+            // dessertAdapter.updateDessert(updatedDessert);
+
+        });
+    }
+
+    private void showMessage(String message) {
+        Snackbar.make(fab, message, Snackbar.LENGTH_SHORT).show();
     }
 
     private void checkForPromotion() {
@@ -91,17 +114,6 @@ public class ListActivity extends AppCompatActivity {
                 ContextCompat.getColor(this, R.color.colorPrimary);
         toolbar.setBackgroundColor(color);
         fab.setBackgroundTintList(ColorStateList.valueOf(color));
-    }
-
-    private void loadData() {
-        firebaseHelper.loadDessertsOnce(retrievedDesserts -> {
-            dessertAdapter.setDesserts(retrievedDesserts);
-            progressBar.setVisibility(View.GONE);
-        }, this::showMessage);
-    }
-
-    private void showMessage(String message) {
-        Snackbar.make(fab, message, Snackbar.LENGTH_SHORT).show();
     }
 
     private void checkForForceUpgrade() {

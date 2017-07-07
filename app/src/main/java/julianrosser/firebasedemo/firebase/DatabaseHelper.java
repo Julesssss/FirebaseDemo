@@ -1,5 +1,6 @@
-package julianrosser.firebasedemo.model.database;
+package julianrosser.firebasedemo.firebase;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -9,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import julianrosser.firebasedemo.FirebaseDemo;
-import julianrosser.firebasedemo.model.objects.Dessert;
+import julianrosser.firebasedemo.model.Dessert;
 
-public class FirebaseHelper extends FirebaseCallbacks {
+public class DatabaseHelper extends FirebaseCallbacks {
 
     private final DatabaseReference databaseRef;
 
-    public FirebaseHelper() {
+    public DatabaseHelper() {
         databaseRef = FirebaseDemo.getInstance().getDatabaseReference();
     }
 
@@ -68,9 +69,36 @@ public class FirebaseHelper extends FirebaseCallbacks {
 
     }
 
-    public void addChildListener() {
-//        DatabaseReference dessertTable = databaseRef.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS);
-//        dessertTable.add
+    public void loadDessertsOnChildChange(DessertAdded addCallback, DessertUpdated updateCallback) {
+        DatabaseReference dessertTable = databaseRef.child(FirebaseKeys.TABLE_MULTIPLE_DESSERTS);
+        dessertTable.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Dessert dessert = dataSnapshot.getValue(Dessert.class);
+                addCallback.onAdd(dessert);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Dessert dessert = dataSnapshot.getValue(Dessert.class);
+                updateCallback.onUpdated(dessert);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

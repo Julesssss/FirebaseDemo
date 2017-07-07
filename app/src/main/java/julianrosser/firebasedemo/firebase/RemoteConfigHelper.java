@@ -1,4 +1,4 @@
-package julianrosser.firebasedemo.remoteconfig;
+package julianrosser.firebasedemo.firebase;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import julianrosser.firebasedemo.BuildConfig;
 import julianrosser.firebasedemo.R;
-import julianrosser.firebasedemo.model.database.FirebaseCallbacks.RemoteConfigCallback;
+import julianrosser.firebasedemo.firebase.FirebaseCallbacks.RemoteConfigCallback;
 
 public class RemoteConfigHelper {
 

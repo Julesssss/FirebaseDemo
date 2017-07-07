@@ -12,8 +12,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import julianrosser.firebasedemo.R;
-import julianrosser.firebasedemo.model.objects.Dessert;
-import julianrosser.firebasedemo.remoteconfig.RemoteConfigHelper;
+import julianrosser.firebasedemo.model.Dessert;
+import julianrosser.firebasedemo.firebase.RemoteConfigHelper;
 
 public class DessertAdapter extends RecyclerView.Adapter<DessertAdapter.DessertHolder> {
 

@@ -1,4 +1,4 @@
-package julianrosser.firebasedemo.model.database;
+package julianrosser.firebasedemo.firebase;
 
 public class FirebaseKeys {
 
